@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:id="@+id/itemContainer"
+    android:padding="6dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/ivIconPreview"
+        android:padding="2dp"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:contentDescription="Icon Preview" />
+    <TextView
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:textColor="@color/text"
+        android:ellipsize="end"
+        android:id="@+id/tvIconLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:singleLine="true" />
+    <TextView
+        android:textSize="9sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:id="@+id/tvBrandBadge"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:paddingTop="1dp"
+        android:paddingBottom="1dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp" />
+</LinearLayout>

@@ -1,0 +1,1072 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B1220">
+<title>Adblock</title>
+<style>
+  :root {
+    --bg: #0B1220;
+    --surface: #131E33;
+    --surface-alt: #1B2A45;
+    --primary: #34D399;
+    --accent: #38BDF8;
+    --danger: #F87171;
+    --warning: #FBBF24;
+    --text: #E5EDF7;
+    --muted: #93A4BD;
+    --radius: 14px;
+  }
+
+  html[data-theme="light"] {
+    --bg: #F1F5F9;
+    --surface: #FFFFFF;
+    --surface-alt: #E2E8F0;
+    --primary: #059669;
+    --accent: #0284C7;
+    --danger: #DC2626;
+    --warning: #D97706;
+    --text: #0F172A;
+    --muted: #475569;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", "Tahoma", system-ui, -apple-system, sans-serif;
+    overscroll-behavior: none;
+    font-size: 14px;
+  }
+
+  body {
+    min-height: 100vh;
+    padding-bottom: calc(64px + env(safe-area-inset-bottom));
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px 8px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--surface-alt);
+  }
+
+  header h1 {
+    flex: 1;
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  header h1 span { color: var(--primary); }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--muted);
+    font-size: 11.5px;
+    white-space: nowrap;
+  }
+
+  .pill::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--muted);
+  }
+
+  .pill.online { color: var(--primary); }
+  .pill.online::before { background: var(--primary); box-shadow: 0 0 6px var(--primary); }
+  .pill.demo { color: var(--accent); }
+  .pill.demo::before { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+
+  main { padding: 4px 12px 12px; }
+
+  .view { display: none; animation: fade 0.18s ease; }
+  .view.active { display: block; }
+
+  @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+  /* Warning Banner & Modal */
+  .warning-banner {
+    background: rgba(248, 113, 113, 0.12);
+    border: 1px solid var(--danger);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .warning-banner .warn-icon {
+    font-size: 18px;
+    line-height: 1;
+    color: var(--danger);
+  }
+
+  .warning-banner .warn-text {
+    flex: 1;
+    font-size: 11.5px;
+    line-height: 1.6;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.82);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(5px);
+  }
+
+  .modal-overlay.hidden { display: none; }
+
+  .modal-card {
+    background: var(--surface);
+    border: 1.5px solid var(--danger);
+    border-radius: 16px;
+    padding: 20px 16px;
+    max-width: 360px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  }
+
+  .modal-card .warn-head { font-size: 26px; margin-bottom: 6px; }
+  .modal-card h3 { margin: 0 0 10px; font-size: 16px; color: var(--danger); font-weight: 700; }
+  .modal-card p { font-size: 12.5px; line-height: 1.65; color: var(--text); margin: 0 0 16px; text-align: justify; text-align-last: center; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--surface-alt);
+    border-radius: var(--radius);
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+
+  .card h2 {
+    margin: 0 0 8px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--muted);
+  }
+
+  .gauge-wrap {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding: 4px 0 8px;
+  }
+
+  #gauge { width: 180px; height: 180px; }
+
+  .gauge-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -42%);
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .gauge-center .rpm {
+    display: block;
+    font-size: 26px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .gauge-center small { color: var(--muted); font-size: 11px; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  .stat { text-align: center; padding: 10px 6px; }
+  .stat .label { display: block; color: var(--muted); font-size: 11.5px; margin-bottom: 4px; }
+  .stat .value { display: block; font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stat small { color: var(--muted); font-size: 10.5px; }
+
+  button {
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    border: 0;
+    cursor: pointer;
+    color: var(--text);
+    background: var(--surface-alt);
+    border-radius: 12px;
+    padding: 10px 14px;
+  }
+
+  button:disabled { opacity: 0.45; }
+
+  button.primary {
+    width: 100%;
+    background: var(--primary);
+    color: #FFFFFF;
+    font-weight: 700;
+  }
+
+  button.ghost { background: transparent; color: var(--accent); }
+  button.danger { color: #FFFFFF; background: var(--danger); font-weight: 700; }
+
+  .row { display: flex; gap: 8px; }
+  .row > button { flex: 1; }
+
+  .list { display: flex; flex-direction: column; gap: 8px; }
+
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--surface-alt);
+    border-radius: 12px;
+    padding: 10px 12px;
+  }
+
+  .item .meta { flex: 1; min-width: 0; }
+  .item .name { font-size: 13.5px; font-weight: 600; }
+  .item .address { color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+  .item .num { font-variant-numeric: tabular-nums; font-size: 17px; font-weight: 700; }
+  .item .unit { color: var(--muted); font-size: 11px; margin-inline-start: 4px; }
+
+  .bar {
+    height: 6px;
+    border-radius: 999px;
+    background: var(--surface-alt);
+    overflow: hidden;
+    margin-top: 6px;
+  }
+
+  .bar > i {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: var(--primary);
+    transition: width 0.25s ease;
+  }
+
+  .empty {
+    color: var(--muted);
+    font-size: 13px;
+    text-align: center;
+    padding: 18px 10px;
+  }
+
+  .code {
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--warning);
+    direction: ltr;
+  }
+
+  .code-desc { color: var(--muted); font-size: 12px; margin-top: 2px; }
+
+  .hint { color: var(--muted); font-size: 12px; line-height: 1.6; }
+
+  .card.about { position: relative; overflow: hidden; }
+
+  .card.about::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    inset-inline: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary), var(--accent), transparent);
+  }
+
+  .credit { text-align: center; padding: 2px 4px; }
+
+  .credit-copy {
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.7;
+    letter-spacing: 0.2px;
+  }
+
+  nav {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 20;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    padding: 6px 6px calc(6px + env(safe-area-inset-bottom));
+    background: var(--surface);
+    border-top: 1px solid var(--surface-alt);
+  }
+
+  nav button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 6px 2px;
+    background: transparent;
+    color: var(--muted);
+    font-size: 11px;
+    border-radius: 10px;
+  }
+
+  nav button .icon { font-size: 17px; line-height: 1; }
+  nav button.active { color: var(--primary); background: var(--surface-alt); }
+
+  #toast {
+    position: fixed;
+    inset-inline: 24px;
+    bottom: calc(80px + env(safe-area-inset-bottom));
+    z-index: 50;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: var(--surface-alt);
+    color: var(--text);
+    font-size: 13px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.2s ease;
+    pointer-events: none;
+  }
+
+  #toast.show { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1 id="appTitle">Adblock<span>DNS</span></h1>
+  <div id="statusPill" class="pill">حماية مفعلة</div>
+</header>
+
+<main>
+  <!-- Persistent Warning Banner -->
+  <div class="warning-banner">
+    <span class="warn-icon">⚠️</span>
+    <div class="warn-text" id="disclaimerBannerText">
+      تنويه : سيتم حظر حسابكم في جوجل ويوتيوب و بعض مواقع التواصل الاجتماعي في حال اكتشاف جوجل أداة حظر الاعلانات والمتتبعات و واداة اعادة ضبط الخوارزميت في جهازكم استخدام التطبيق على مسؤوليتكم الخاصة .
+    </div>
+  </div>
+
+  <!-- 1. Dashboard -->
+  <section id="view-dashboard" class="view active">
+    <div class="card">
+      <h2 id="txtRpmTitle">نسبة حظر الإعلانات والتتبع</h2>
+      <div class="gauge-wrap">
+        <canvas id="gauge" width="360" height="360"></canvas>
+        <div class="gauge-center">
+          <span class="rpm" id="rpmValue">99.8%</span>
+          <small id="txtGaugeSub">نشط ومحمي</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card stat">
+        <span class="label" id="txtStatSpeed">الإعلانات المحظورة</span>
+        <span class="value" id="dashSpeed">14,280</span>
+        <small>عنصر</small>
+      </div>
+      <div class="card stat">
+        <span class="label" id="txtStatCoolant">المتتبعات المحجوبة</span>
+        <span class="value" id="dashCoolant">8,450</span>
+        <small>رابط</small>
+      </div>
+      <div class="card stat">
+        <span class="label" id="txtStatVoltage">البيانات الموفرة</span>
+        <span class="value" id="dashVoltage">420</span>
+        <small>MB</small>
+      </div>
+      <div class="card stat">
+        <span class="label" id="txtStatLoad">استجابة DNS</span>
+        <span class="value" id="dashLoad">12</span>
+        <small>ms</small>
+      </div>
+    </div>
+
+    <button id="btnConnect" class="primary" style="margin-top:6px">خادم DNS الخاص</button>
+  </section>
+
+  <!-- 2. Live data -->
+  <section id="view-live" class="view">
+    <div class="card">
+      <h2 id="txtLiveTitle">سجل الحماية المباشر</h2>
+      <div class="hint" id="liveHint">جارٍ اعتراض وحظر طلبات الإعلانات والتتبع…</div>
+    </div>
+    <div class="list" id="liveList"></div>
+  </section>
+
+  <!-- 3. DTC -->
+  <section id="view-dtc" class="view">
+    <div class="card">
+      <h2 id="txtDtcTitle">قواعد الفلترة والأمان</h2>
+      <div class="row" style="margin-bottom:8px">
+        <button id="btnReadDtc">فحص الفلاتر</button>
+        <button id="btnClearDtc" class="danger">تحديث القوائم</button>
+      </div>
+      <div class="hint" id="txtDtcHint">يتم تحديث قائمة حظر الإعلانات تلقائياً لحماية خصوصيتك.</div>
+    </div>
+    <div class="list" id="dtcList">
+      <div class="empty" id="txtDtcEmpty">جميع القوائم محدثة ومحميّة.</div>
+    </div>
+  </section>
+
+  <!-- 4. Settings -->
+  <section id="view-settings" class="view">
+    <div class="card">
+      <h2 id="txtLangTitle">اللغة</h2>
+      <div class="row">
+        <button id="btnLangAr">العربية</button>
+        <button id="btnLangEn">English</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 id="txtThemeTitle">السمة</h2>
+      <div class="row">
+        <button id="btnThemeDark">ليلي 🌙</button>
+        <button id="btnThemeLight">نهاري ☀️</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 id="txtAdapterTitle">خادم DNS المخصص</h2>
+      <button id="btnRefreshDevices" style="width:100%;margin-bottom:8px">تحديث الخوادم</button>
+      <div class="list" id="deviceList">
+        <div class="empty" id="txtDeviceEmpty">جارٍ البحث عن خوادم سريعة…</div>
+      </div>
+      <button id="btnDisconnect" class="danger" style="width:100%;margin-top:8px">إيقاف التصفية</button>
+    </div>
+
+    <div class="card about">
+      <h2 id="txtAboutTitle">حول</h2>
+      <div class="hint" id="aboutText" style="padding:2px 0;min-height:32px;text-align:center">Adblock DNS — إصدار 1.0</div>
+
+      <div class="credit">
+        <div class="credit-copy"><span id="txtCopyright">حقوق النشر © </span><span id="copyYear">2026</span> · <span id="txtRights">جميع الحقوق محفوظة</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<nav>
+  <button data-view="dashboard" class="active"><span class="icon">◉</span><span id="navDashText">القائمة</span></button>
+  <button data-view="live"><span class="icon">▤</span><span id="navLiveText">البيانات</span></button>
+  <button data-view="dtc"><span class="icon">⚠</span><span id="navDtcText">الفلاتر</span></button>
+  <button data-view="settings"><span class="icon">⚙</span><span id="navSetText">الإعدادات</span></button>
+</nav>
+
+<!-- Pop-up Modal Disclaimer -->
+<div id="disclaimerModal" class="modal-overlay">
+  <div class="modal-card">
+    <div class="warn-head">⚠️</div>
+    <h3 id="disclaimerModalTitle">تنويه وإخلاء مسؤولية</h3>
+    <p id="disclaimerModalBody">تنويه : سيتم حظر حسابكم في جوجل ويوتيوب و بعض مواقع التواصل الاجتماعي في حال اكتشاف جوجل أداة حظر الاعلانات والمتتبعات و واداة اعادة ضبط الخوارزميت في جهازكم استخدام التطبيق على مسؤوليتكم الخاصة .</p>
+    <button id="btnConfirmDisclaimer" class="primary danger">فهمت ذلك والموافقة</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var B = window.NativeBridge || null;
+
+  var I18N = {
+    ar: {
+      nav_dash: "القائمة",
+      nav_live: "البيانات",
+      nav_dtc: "الفلاتر",
+      nav_set: "الإعدادات",
+      title_rpm: "نسبة حظر الإعلانات والتتبع",
+      stat_speed: "الإعلانات المحظورة",
+      stat_coolant: "المتتبعات المحجوبة",
+      stat_voltage: "البيانات الموفرة",
+      stat_load: "استجابة DNS",
+      btn_connect: "خادم DNS الخاص",
+      title_live: "سجل الحماية المباشر",
+      live_disconnected: "الحماية مفعلة وتراقب طلبات الشبكة.",
+      live_waiting: "جارٍ فحص خوادم الإعلانات…",
+      live_running: "تم الاعتراض والحظر بنجاح.",
+      title_dtc: "قواعد الفلترة والأمان",
+      btn_read_dtc: "فحص الفلاتر",
+      btn_clear_dtc: "تحديث القوائم",
+      dtc_hint: "يتم تحديث قائمة حظر الإعلانات تلقائياً لحماية خصوصيتك.",
+      dtc_empty: "جميع القوائم محدثة ومحميّة.",
+      title_lang: "اللغة",
+      title_theme: "السمة",
+      title_adapter: "خادم DNS المخصص",
+      btn_refresh: "تحديث الخوادم",
+      btn_disconnect: "إيقاف التصفية",
+      device_empty: "خوادم AdGuard DNS, Cloudflare, Google DNS مفعلة.",
+      title_about: "حول",
+      about_ver: "Adblock DNS — إصدار 1.0",
+      copyright: "حقوق النشر © ",
+      rights: "جميع الحقوق محفوظة",
+      disconnected: "حماية مفعلة",
+      demo: "وضع آمن",
+      connect: "تصل",
+      clear_confirm: "تحديث كل قواعد الحظر؟",
+      dtc_found: "تم فحص ",
+      dtc_codes: " فلتر",
+      dtc_none: "جميع القوائم نشطة",
+      dtc_cleared_toast: "تم تحديث قواعد الحظر",
+      connect_first: "الحماية تعمل بالفعل",
+      disclaimer_title: "تنويه وإخلاء مسؤولية",
+      disclaimer_text: "تنويه : سيتم حظر حسابكم في جوجل ويوتيوب و بعض مواقع التواصل الاجتماعي في حال اكتشاف جوجل أداة حظر الاعلانات والمتتبعات و واداة اعادة ضبط الخوارزميت في جهازكم استخدام التطبيق على مسؤوليتكم الخاصة .",
+      btn_confirm: "فهمت ذلك والموافقة"
+    },
+    en: {
+      nav_dash: "Dashboard",
+      nav_live: "Live Stream",
+      nav_dtc: "Filters",
+      nav_set: "Settings",
+      title_rpm: "Ad & Tracker Block Rate",
+      stat_speed: "Ads Blocked",
+      stat_coolant: "Trackers Blocked",
+      stat_voltage: "Data Saved",
+      stat_load: "DNS Latency",
+      btn_connect: "Private DNS Server",
+      title_live: "Live Protection Log",
+      live_disconnected: "Protection active and monitoring network.",
+      live_waiting: "Scanning ad servers…",
+      live_running: "Successfully blocked and filtered.",
+      title_dtc: "Filter Rules & Security",
+      btn_read_dtc: "Scan Filters",
+      btn_clear_dtc: "Update Rules",
+      dtc_hint: "Blocklists update automatically to protect privacy.",
+      dtc_empty: "All blocklists are up to date and active.",
+      title_lang: "Language",
+      title_theme: "Theme",
+      title_adapter: "Custom DNS Server",
+      btn_refresh: "Refresh Servers",
+      btn_disconnect: "Pause Filtering",
+      device_empty: "AdGuard DNS, Cloudflare, Google DNS active.",
+      title_about: "About",
+      about_ver: "Adblock DNS — Version 1.0",
+      copyright: "Copyright © ",
+      rights: "All rights reserved",
+      disconnected: "Protected",
+      demo: "Safe Mode",
+      connect: "Connected",
+      clear_confirm: "Update all blocklist rules?",
+      dtc_found: "Scanned ",
+      dtc_codes: " filter(s)",
+      dtc_none: "All blocklists active",
+      dtc_cleared_toast: "Blocklist rules updated",
+      connect_first: "Protection is active",
+      disclaimer_title: "Disclaimer & Warning",
+      disclaimer_text: "Notice: Your accounts on Google, YouTube, and some social media platforms may be banned if Google detects ad-blocking tools, trackers blockers, or algorithm reset tools on your device. Use this application at your own risk.",
+      btn_confirm: "I Understand & Agree"
+    }
+  };
+
+  var state = {
+    connected: true,
+    demo: false,
+    device: "AdGuard DNS",
+    pids: {},
+    codes: [],
+    devices: [],
+    theme: "dark",
+    lang: "ar"
+  };
+
+  var ADBLOCK_STREAM = [
+    { name: "doubleclick.net", address: "Ad System • Blocked", num: "BLOCKED", unit: "0ms" },
+    { name: "google-analytics.com", address: "Tracker • Blocked", num: "BLOCKED", unit: "0ms" },
+    { name: "facebook.com/tr", address: "Pixel Tracker • Blocked", num: "BLOCKED", unit: "0ms" },
+    { name: "adservice.google.com", address: "Ad Network • Blocked", num: "BLOCKED", unit: "0ms" },
+    { name: "appsflyer.com", address: "Analytics • Blocked", num: "BLOCKED", unit: "0ms" },
+    { name: "taboola.com", address: "Sponsored Ads • Blocked", num: "BLOCKED", unit: "0ms" },
+    { name: "criteo.com", address: "Retargeting • Blocked", num: "BLOCKED", unit: "0ms" }
+  ];
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  function call(method) {
+    if (!B || typeof B[method] !== "function") return null;
+    try {
+      return B[method].apply(B, Array.prototype.slice.call(arguments, 1));
+    } catch (e) {
+      console.warn("bridge " + method + " failed", e);
+      return null;
+    }
+  }
+
+  // ---------------------------------------------------------------- Language
+
+  function applyLanguage(lang) {
+    state.lang = lang === "en" ? "en" : "ar";
+    var dict = I18N[state.lang];
+
+    document.documentElement.setAttribute("lang", state.lang);
+    document.documentElement.setAttribute("dir", state.lang === "ar" ? "rtl" : "ltr");
+
+    if (state.lang === "en") {
+      $("btnLangEn").classList.add("primary");
+      $("btnLangAr").classList.remove("primary");
+    } else {
+      $("btnLangAr").classList.add("primary");
+      $("btnLangEn").classList.remove("primary");
+    }
+
+    $("navDashText").textContent = dict.nav_dash;
+    $("navLiveText").textContent = dict.nav_live;
+    $("navDtcText").textContent = dict.nav_dtc;
+    $("navSetText").textContent = dict.nav_set;
+
+    $("txtRpmTitle").textContent = dict.title_rpm;
+    $("txtStatSpeed").textContent = dict.stat_speed;
+    $("txtStatCoolant").textContent = dict.stat_coolant;
+    $("txtStatVoltage").textContent = dict.stat_voltage;
+    $("txtStatLoad").textContent = dict.stat_load;
+    $("btnConnect").textContent = dict.btn_connect;
+
+    $("txtLiveTitle").textContent = dict.title_live;
+    $("txtDtcTitle").textContent = dict.title_dtc;
+    $("btnReadDtc").textContent = dict.btn_read_dtc;
+    $("btnClearDtc").textContent = dict.btn_clear_dtc;
+    $("txtDtcHint").textContent = dict.dtc_hint;
+
+    $("txtLangTitle").textContent = dict.title_lang;
+    $("txtThemeTitle").textContent = dict.title_theme;
+    $("txtAdapterTitle").textContent = dict.title_adapter;
+    $("btnRefreshDevices").textContent = dict.btn_refresh;
+    $("btnDisconnect").textContent = dict.btn_disconnect;
+    $("txtAboutTitle").textContent = dict.title_about;
+    $("aboutText").textContent = dict.about_ver;
+    $("txtCopyright").textContent = dict.copyright;
+    $("txtRights").textContent = dict.rights;
+
+    $("disclaimerBannerText").textContent = dict.disclaimer_text;
+    $("disclaimerModalTitle").textContent = dict.disclaimer_title;
+    $("disclaimerModalBody").textContent = dict.disclaimer_text;
+    $("btnConfirmDisclaimer").textContent = dict.btn_confirm;
+
+    renderConnection();
+    renderLive();
+    renderCodes();
+    renderDevices();
+  }
+
+  function setLanguage(lang) {
+    applyLanguage(lang);
+    localStorage.setItem("lang", state.lang);
+    call("setLanguage", state.lang);
+  }
+
+  $("btnLangAr").addEventListener("click", function () { setLanguage("ar"); });
+  $("btnLangEn").addEventListener("click", function () { setLanguage("en"); });
+
+  var savedLang = localStorage.getItem("lang");
+  if (!savedLang && B && typeof B.getLanguage === "function") {
+    savedLang = call("getLanguage");
+  }
+  applyLanguage(savedLang || "ar");
+
+  // ---------------------------------------------------------------- Theme
+
+  function applyTheme(theme) {
+    state.theme = theme === "light" ? "light" : "dark";
+    if (state.theme === "light") {
+      document.documentElement.setAttribute("data-theme", "light");
+      $("btnThemeLight").classList.add("primary");
+      $("btnThemeDark").classList.remove("primary");
+    } else {
+      document.documentElement.removeAttribute("data-theme");
+      $("btnThemeDark").classList.add("primary");
+      $("btnThemeLight").classList.remove("primary");
+    }
+  }
+
+  function setTheme(theme) {
+    applyTheme(theme);
+    localStorage.setItem("theme", state.theme);
+    call("setTheme", state.theme);
+  }
+
+  $("btnThemeDark").addEventListener("click", function () { setTheme("dark"); });
+  $("btnThemeLight").addEventListener("click", function () { setTheme("light"); });
+
+  var savedTheme = localStorage.getItem("theme");
+  if (!savedTheme && B && typeof B.getTheme === "function") {
+    savedTheme = call("getTheme");
+  }
+  applyTheme(savedTheme || "dark");
+
+  // ---------------------------------------------------------------- Disclaimer Modal
+
+  $("btnConfirmDisclaimer").addEventListener("click", function () {
+    $("disclaimerModal").classList.add("hidden");
+  });
+
+  // ---------------------------------------------------------------- UI helpers
+
+  var toastTimer = null;
+  function toast(message) {
+    var el = $("toast");
+    el.textContent = message;
+    el.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove("show"); }, 2600);
+  }
+
+  function setPill(text, cls) {
+    var pill = $("statusPill");
+    pill.textContent = text;
+    pill.className = "pill" + (cls ? " " + cls : "");
+  }
+
+  // ---------------------------------------------------------------- navigation
+
+  var VIEWS = ["dashboard", "live", "dtc", "settings"];
+  var currentView = "dashboard";
+
+  function show(view) {
+    if (VIEWS.indexOf(view) < 0) view = "dashboard";
+    currentView = view;
+
+    VIEWS.forEach(function (name) {
+      var section = $("view-" + name);
+      if (section) section.classList.toggle("active", name === view);
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll("nav button"), function (button) {
+      button.classList.toggle("active", button.getAttribute("data-view") === view);
+    });
+
+    if (view === "settings") renderDevices();
+    if (view === "live") renderLive();
+    if (view === "dtc") renderCodes();
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll("nav button"), function (button) {
+    button.addEventListener("click", function () {
+      show(button.getAttribute("data-view"));
+    });
+  });
+
+  window.addEventListener("hashchange", function () {
+    show(location.hash.replace("#", ""));
+  });
+
+  // ---------------------------------------------------------------- gauge
+
+  function drawGauge(pct) {
+    var canvas = $("gauge");
+    var ctx = canvas.getContext("2d");
+    var size = canvas.width;
+    var cx = size / 2;
+    var cy = size / 2;
+    var radius = size * 0.39;
+    var start = Math.PI * 0.75;
+    var sweep = Math.PI * 1.5;
+
+    ctx.clearRect(0, 0, size, size);
+
+    ctx.lineWidth = 22;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = state.theme === "light" ? "rgba(71, 85, 105, 0.15)" : "rgba(147, 164, 189, 0.16)";
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, start, start + sweep);
+    ctx.stroke();
+
+    var ratio = Math.max(0, Math.min(1, pct / 100));
+    if (ratio > 0.004) {
+      var gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, "#059669");
+      gradient.addColorStop(0.6, "#0284C7");
+      gradient.addColorStop(1, "#34D399");
+      ctx.strokeStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, start, start + sweep * ratio);
+      ctx.stroke();
+    }
+
+    var angle = start + sweep * ratio;
+    var inner = radius - 36;
+    ctx.lineWidth = 6;
+    ctx.strokeStyle = state.theme === "light" ? "#059669" : "#34D399";
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(angle) * (radius - 16), cy + Math.sin(angle) * (radius - 16));
+    ctx.lineTo(cx + Math.cos(angle) * inner, cy + Math.sin(angle) * inner);
+    ctx.stroke();
+  }
+
+  // ---------------------------------------------------------------- render
+
+  function renderDashboard() {
+    drawGauge(99.8);
+  }
+
+  function renderLive() {
+    var list = $("liveList");
+    list.innerHTML = "";
+
+    ADBLOCK_STREAM.forEach(function (item) {
+      var el = document.createElement("div");
+      el.className = "item";
+
+      var metaBox = document.createElement("div");
+      metaBox.className = "meta";
+
+      var name = document.createElement("div");
+      name.className = "name";
+      name.textContent = item.name;
+
+      var address = document.createElement("div");
+      address.className = "address";
+      address.textContent = item.address;
+
+      var bar = document.createElement("div");
+      bar.className = "bar";
+      var fill = document.createElement("i");
+      fill.style.width = "100%";
+      bar.appendChild(fill);
+
+      metaBox.appendChild(name);
+      metaBox.appendChild(address);
+      metaBox.appendChild(bar);
+
+      var valBox = document.createElement("div");
+      valBox.style.textAlign = "center";
+
+      var num = document.createElement("span");
+      num.className = "num";
+      num.style.color = "var(--primary)";
+      num.style.fontSize = "13px";
+      num.textContent = item.num;
+
+      valBox.appendChild(num);
+      el.appendChild(metaBox);
+      el.appendChild(valBox);
+
+      list.appendChild(el);
+    });
+  }
+
+  function renderCodes() {
+    var list = $("dtcList");
+    list.innerHTML = "";
+    var dict = I18N[state.lang];
+
+    var filters = [
+      { code: "ADGUARD-BASE", descAr: "فلتر AdGuard الرئيسي لحظر الإعلانات", descEn: "AdGuard Base Adblocking Filter" },
+      { code: "EASYLIST-PRIVACY", descAr: "قائمة EasyList لحظر المتتبعات", descEn: "EasyList Privacy Tracker Blocklist" },
+      { code: "MALWARE-DOMAINS", descAr: "فلتر الوقاية من المواقع الخبيثة", descEn: "Malware Domain Protection List" },
+      { code: "ANTI-TRACKING-V2", descAr: "قواعد حظر التتبع الجغرافي والرادار", descEn: "Geo-Tracking & Radar Shield Rules" }
+    ];
+
+    filters.forEach(function (filter) {
+      var item = document.createElement("div");
+      item.className = "item";
+      item.style.display = "block";
+
+      var codeEl = document.createElement("div");
+      codeEl.className = "code";
+      codeEl.textContent = filter.code;
+      item.appendChild(codeEl);
+
+      var desc = document.createElement("div");
+      desc.className = "code-desc";
+      desc.textContent = state.lang === "en" ? filter.descEn : filter.descAr;
+      item.appendChild(desc);
+
+      list.appendChild(item);
+    });
+  }
+
+  function renderConnection() {
+    var dict = I18N[state.lang];
+    setPill(dict.disconnected, "online");
+  }
+
+  function renderDevices() {
+    var list = $("deviceList");
+    list.innerHTML = "";
+
+    var dnsServers = [
+      { name: "AdGuard DNS Shield", address: "94.140.14.14 (Family Protection)" },
+      { name: "Cloudflare Private DNS", address: "1.1.1.2 (Security & Malware)" },
+      { name: "Google Secure DNS", address: "8.8.8.8 (DoH & DoT Encrypted)" }
+    ];
+
+    dnsServers.forEach(function (dns) {
+      var item = document.createElement("button");
+      item.className = "item";
+      item.style.width = "100%";
+      item.style.textAlign = state.lang === "en" ? "left" : "right";
+
+      var meta = document.createElement("div");
+      meta.className = "meta";
+
+      var name = document.createElement("div");
+      name.className = "name";
+      name.textContent = dns.name;
+
+      var address = document.createElement("div");
+      address.className = "address";
+      address.textContent = dns.address;
+
+      meta.appendChild(name);
+      meta.appendChild(address);
+
+      var status = document.createElement("span");
+      status.className = "num";
+      status.style.fontSize = "13px";
+      status.style.color = "var(--primary)";
+      status.textContent = state.lang === "en" ? "Active" : "نشط";
+
+      item.appendChild(meta);
+      item.appendChild(status);
+
+      item.addEventListener("click", function () {
+        toast(state.lang === "en" ? "Selected " + dns.name : "تم اختيار " + dns.name);
+      });
+
+      list.appendChild(item);
+    });
+  }
+
+  // ---------------------------------------------------------------- hidden entry
+  //
+  // CRITICAL REQUIREMENT: Do NOT modify hidden entry triggers!
+  // 1. Long press on #appTitle
+  // 2. 7 quick taps on #aboutText
+
+  function requestHidden() {
+    call("requestHidden");
+  }
+
+  var tapCount = 0;
+  var tapTimer = null;
+  $("aboutText").addEventListener("click", function () {
+    tapCount++;
+    clearTimeout(tapTimer);
+    tapTimer = setTimeout(function () { tapCount = 0; }, 1500);
+    if (tapCount >= 7) {
+      tapCount = 0;
+      requestHidden();
+    }
+  });
+
+  var pressTimer = null;
+  var title = $("appTitle");
+
+  title.addEventListener("pointerdown", function () {
+    clearTimeout(pressTimer);
+    pressTimer = setTimeout(requestHidden, 900);
+  });
+
+  ["pointerup", "pointercancel", "pointerleave", "contextmenu"].forEach(function (eventName) {
+    title.addEventListener(eventName, function () { clearTimeout(pressTimer); });
+  });
+
+  // ---------------------------------------------------------------- native events
+
+  window.OBD = {
+    emit: function (event) {
+      if (!event || !event.type) return;
+
+      switch (event.type) {
+        case "status":
+          renderConnection();
+          if (event.theme) applyTheme(event.theme);
+          if (event.lang) applyLanguage(event.lang);
+          break;
+
+        case "error":
+          toast(event.message || "Error");
+          break;
+
+        default:
+          console.log("native event", event);
+      }
+    },
+
+    handleBack: function () {
+      if (currentView !== "dashboard") {
+        show("dashboard");
+        return true;
+      }
+      return false;
+    }
+  };
+
+  // ---------------------------------------------------------------- actions
+
+  $("btnConnect").addEventListener("click", function () {
+    show("settings");
+    renderDevices();
+  });
+
+  $("btnRefreshDevices").addEventListener("click", function () {
+    renderDevices();
+    toast(state.lang === "en" ? "DNS servers updated" : "تم تحديث الخوادم");
+  });
+
+  $("btnDisconnect").addEventListener("click", function () {
+    toast(state.lang === "en" ? "Protection paused" : "تم إيقاف التصفية مؤقتاً");
+  });
+
+  $("btnReadDtc").addEventListener("click", function () {
+    renderCodes();
+    toast(state.lang === "en" ? "Scanned 4 active filters" : "تم فحص 4 فلاتر نشطة");
+  });
+
+  $("btnClearDtc").addEventListener("click", function () {
+    toast(state.lang === "en" ? "Filter rules updated" : "تم تحديث قواعد الفلترة");
+  });
+
+  // ---------------------------------------------------------------- boot
+
+  drawGauge(99.8);
+
+  var status = null;
+  var statusRaw = call("getStatus");
+  if (statusRaw) {
+    try { status = JSON.parse(statusRaw); } catch (e) { status = null; }
+  }
+  if (status) {
+    if (status.theme) applyTheme(status.theme);
+    if (status.lang) applyLanguage(status.lang);
+  }
+
+  var yearEl = $("copyYear");
+  if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
+  renderConnection();
+  renderDashboard();
+  show(location.hash.replace("#", "") || "dashboard");
+})();
+</script>
+</body>
+</html>

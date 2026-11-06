@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_card"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="14dp"
+    android:paddingEnd="14dp">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+        <TextView
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/text"
+            android:ellipsize="end"
+            android:id="@+id/favItemName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1" />
+        <TextView
+            android:textSize="13sp"
+            android:textColor="@color/text_muted"
+            android:id="@+id/favItemCoords"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
+    <TextView
+        android:textSize="20sp"
+        android:id="@+id/btnDeleteFav"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="🗑️" />
+</LinearLayout>

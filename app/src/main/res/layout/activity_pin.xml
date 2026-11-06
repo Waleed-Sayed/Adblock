@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pinRoot"
+    android:background="@color/bg"
+    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+    <LinearLayout
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="36dp"
+        android:paddingBottom="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp">
+        <ImageView
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:src="@drawable/ic_launcher_foreground"
+            android:contentDescription="@string/app_name" />
+        <TextView
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/text"
+            android:id="@+id/pinTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/pin_enter" />
+        <TextView
+            android:textSize="14sp"
+            android:textColor="@color/text_muted"
+            android:id="@+id/pinSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@string/pin_hint_verify" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:id="@+id/modeToggleRow"
+            android:background="@drawable/bg_field"
+            android:padding="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp">
+            <Button
+                android:textSize="13sp"
+                android:textColor="@color/text"
+                android:id="@+id/btnModePin"
+                android:background="@drawable/bg_primary_button"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:text="@string/pin_mode_code"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp" />
+            <Button
+                android:textSize="13sp"
+                android:textColor="@color/text_muted"
+                android:id="@+id/btnModePattern"
+                android:background="?attr/selectableItemBackground"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:text="@string/pin_mode_pattern"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:id="@+id/pinContainer"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+                <View
+                    android:id="@+id/dot0"
+                    android:background="@drawable/pin_dot"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_margin="8dp" />
+                <View
+                    android:id="@+id/dot1"
+                    android:background="@drawable/pin_dot"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_margin="8dp" />
+                <View
+                    android:id="@+id/dot2"
+                    android:background="@drawable/pin_dot"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_margin="8dp" />
+                <View
+                    android:id="@+id/dot3"
+                    android:background="@drawable/pin_dot"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_margin="8dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp">
+                <Button
+                    android:id="@+id/key1"
+                    android:text="1"
+                    style="@style/PinKey" />
+                <Button
+                    android:id="@+id/key2"
+                    android:text="2"
+                    style="@style/PinKey" />
+                <Button
+                    android:id="@+id/key3"
+                    android:text="3"
+                    style="@style/PinKey" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/key4"
+                    android:text="4"
+                    style="@style/PinKey" />
+                <Button
+                    android:id="@+id/key5"
+                    android:text="5"
+                    style="@style/PinKey" />
+                <Button
+                    android:id="@+id/key6"
+                    android:text="6"
+                    style="@style/PinKey" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/key7"
+                    android:text="7"
+                    style="@style/PinKey" />
+                <Button
+                    android:id="@+id/key8"
+                    android:text="8"
+                    style="@style/PinKey" />
+                <Button
+                    android:id="@+id/key9"
+                    android:text="9"
+                    style="@style/PinKey" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:textSize="14sp"
+                    android:id="@+id/keyClear"
+                    android:text="@string/pin_clear"
+                    style="@style/PinKey" />
+                <Button
+                    android:id="@+id/key0"
+                    android:text="0"
+                    style="@style/PinKey" />
+                <Button
+                    android:textSize="20sp"
+                    android:id="@+id/keyDelete"
+                    android:text="⌫"
+                    style="@style/PinKey" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:id="@+id/patternContainer"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.waleedsayed.adblock.security.PatternView
+                android:id="@+id/patternView"
+                android:layout_width="330dp"
+                android:layout_height="330dp"
+                android:layout_marginTop="16dp" />
+        </LinearLayout>
+        <TextView
+            android:textSize="15sp"
+            android:textColor="@color/text_muted"
+            android:id="@+id/pinCancel"
+            android:padding="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/pin_cancel" />
+    </LinearLayout>
+</ScrollView>

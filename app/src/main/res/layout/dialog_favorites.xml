@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/bg"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/favorites_title"
+            android:layout_weight="1" />
+        <TextView
+            android:textSize="14sp"
+            android:textColor="@color/accent"
+            android:id="@+id/btnCloseFavorites"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/close" />
+    </LinearLayout>
+    <TextView
+        android:textSize="12sp"
+        android:textColor="@color/text_muted"
+        android:id="@+id/favoritesCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp" />
+    <LinearLayout
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+        <Button
+            android:textSize="20sp"
+            android:id="@+id/btnFavSelect"
+            android:background="@drawable/bg_key"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:text="📍"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp" />
+        <Button
+            android:textSize="20sp"
+            android:id="@+id/btnFavShare"
+            android:background="@drawable/bg_key"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:text="📤"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp" />
+        <Button
+            android:textSize="20sp"
+            android:id="@+id/btnFavExport"
+            android:background="@drawable/bg_key"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:text="💾"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp" />
+        <Button
+            android:textSize="20sp"
+            android:id="@+id/btnFavSaveDevice"
+            android:background="@drawable/bg_key"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:text="📁"
+            android:layout_weight="1"
+            android:layout_marginEnd="6dp" />
+        <Button
+            android:textSize="20sp"
+            android:id="@+id/btnFavImport"
+            android:background="@drawable/bg_key"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:text="📥"
+            android:layout_weight="1" />
+    </LinearLayout>
+    <ListView
+        android:id="@+id/favoritesList"
+        android:scrollbars="none"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:divider="@null"
+        android:dividerHeight="8dp"
+        android:layout_weight="1" />
+</LinearLayout>

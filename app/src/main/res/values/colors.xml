@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="accent">#0284C7</color>
+    <color name="bg">#F1F5F9</color>
+    <color name="danger">#DC2626</color>
+    <color name="primary">#059669</color>
+    <color name="primary_dark">#047857</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_alt">#E2E8F0</color>
+    <color name="text">#0F172A</color>
+    <color name="text_muted">#475569</color>
+    <color name="warning">#D97706</color>
+
+    <!-- App Icon Background Colors for Adaptive Icons -->
+    <color name="ic_bg_settings">#0072DE</color>
+    <color name="ic_bg_camera">#1C1C1E</color>
+    <color name="ic_bg_gallery">#0288D1</color>
+    <color name="ic_bg_phone">#00C853</color>
+    <color name="ic_bg_messages">#00A3FF</color>
+    <color name="ic_bg_file_manager">#FF9800</color>
+    <color name="ic_bg_clock">#1C1F26</color>
+    <color name="ic_bg_calculator">#00BFA5</color>
+    <color name="ic_bg_store">#1565C0</color>
+    <color name="ic_bg_browser">#5E35B1</color>
+    <color name="ic_bg_notes">#FB8C00</color>
+    <color name="ic_bg_weather">#29B6F6</color>
+    <color name="ic_bg_wifi">#0072DE</color>
+    <color name="ic_bg_bluetooth">#0288D1</color>
+    <color name="ic_bg_nfc">#00ACC1</color>
+    <color name="ic_bg_signal">#0072DE</color>
+    <color name="ic_bg_battery">#43A047</color>
+    <color name="ic_bg_sound">#00ACC1</color>
+    <color name="ic_bg_flight">#1565C0</color>
+    <color name="ic_bg_location">#E53935</color>
+    <color name="ic_bg_hotspot">#FF9800</color>
+    <color name="ic_bg_flashlight">#FFB300</color>
+    <color name="ic_bg_dnd">#D32F2F</color>
+    <color name="ic_bg_rotation">#5C6BC0</color>
+</resources>

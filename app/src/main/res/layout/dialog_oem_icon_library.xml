@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/bg"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:layoutDirection="rtl">
+
+    <!-- Header -->
+    <LinearLayout
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <TextView
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="مكتبة أيقونات الواجهات الرسمية" />
+            <TextView
+                android:textSize="12sp"
+                android:textColor="@color/text_muted"
+                android:id="@+id/tvIconLibrarySubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="أيقونات النظام وشريط الإشعارات لسامسونج، شاومي، وهونر" />
+        </LinearLayout>
+        <TextView
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/accent"
+            android:id="@+id/btnCloseLibrary"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/close" />
+    </LinearLayout>
+
+    <!-- New App Name Input Field -->
+    <TextView
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:textColor="@color/accent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="اسم التطبيق الجديد:" />
+    <EditText
+        android:textSize="15sp"
+        android:textColor="@color/text"
+        android:textColorHint="@color/text_muted"
+        android:id="@+id/etNewAppName"
+        android:background="@drawable/bg_field"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="4dp"
+        android:hint="اكتب اسم التطبيق المخصص هنا..."
+        android:inputType="text"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:importantForAutofill="no" />
+
+    <!-- Search Input -->
+    <EditText
+        android:textSize="14sp"
+        android:textColor="@color/text"
+        android:textColorHint="@color/text_muted"
+        android:id="@+id/etSearchIcon"
+        android:background="@drawable/bg_search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="8dp"
+        android:hint="ابحث عن أيقونة... (مثال: إعدادات، واي فاي)"
+        android:inputType="text"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:importantForAutofill="no" />
+
+    <!-- Brand Filter Tabs -->
+    <HorizontalScrollView
+        android:scrollbars="none"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <Button
+                android:textSize="12sp"
+                android:textColor="@color/bg"
+                android:id="@+id/btnFilterAllBrand"
+                android:background="@drawable/bg_primary_button"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="الكل"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:layout_marginEnd="6dp" />
+            <Button
+                android:textSize="12sp"
+                android:textColor="@color/text"
+                android:id="@+id/btnFilterSamsung"
+                android:background="@drawable/bg_key"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="سامسونج (One UI)"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:layout_marginEnd="6dp" />
+            <Button
+                android:textSize="12sp"
+                android:textColor="@color/text"
+                android:id="@+id/btnFilterXiaomi"
+                android:background="@drawable/bg_key"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="شاومي (HyperOS)"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:layout_marginEnd="6dp" />
+            <Button
+                android:textSize="12sp"
+                android:textColor="@color/text"
+                android:id="@+id/btnFilterHonor"
+                android:background="@drawable/bg_key"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="هونر (MagicOS)"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Category Filter Tabs -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp">
+        <Button
+            android:textSize="11sp"
+            android:textColor="@color/bg"
+            android:id="@+id/btnFilterAllCat"
+            android:background="@drawable/bg_primary_button"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:text="جميع الأقسام"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp" />
+        <Button
+            android:textSize="11sp"
+            android:textColor="@color/text"
+            android:id="@+id/btnFilterApps"
+            android:background="@drawable/bg_key"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:text="تطبيقات النظام"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp" />
+        <Button
+            android:textSize="11sp"
+            android:textColor="@color/text"
+            android:id="@+id/btnFilterStatus"
+            android:background="@drawable/bg_key"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:text="الإشعارات والحالة"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <!-- Counter Bar -->
+    <TextView
+        android:textSize="12sp"
+        android:textColor="@color/primary"
+        android:id="@+id/tvIconCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="جارٍ تحميل الأيقونات..." />
+
+    <!-- Grid View -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvOemIcons"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="6dp"
+        android:layout_weight="1" />
+
+    <!-- Save & Apply Button -->
+    <Button
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="@color/bg"
+        android:id="@+id/btnSaveAndApply"
+        android:background="@drawable/bg_primary_button"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="10dp"
+        android:text="✨ حفظ وتطبيق الأيقونة والاسم رسمياً"
+        android:textAllCaps="false" />
+
+</LinearLayout>
